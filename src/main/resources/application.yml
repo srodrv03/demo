@@ -1,0 +1,26 @@
+spring:
+  application:
+      name: demo
+  profiles:
+    active: local
+  datasource:
+    url: '${env.spring.datasource.url}'
+    name: '${env.spring.datasource.name}'
+    driverClassName: '${env.spring.datasource.driverClassName}'
+    username: '${env.spring.datasource.username}'
+    password: '${env.spring.datasource.password}'
+  jpa:
+    database-platform: '${env.spring.jpa.database-platform}'
+    defer-datasource-initialization: true
+  h2:
+    console:
+      enabled: '${env.spring.h2.console.enabled}'
+
+# OpenAPI Configuration
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+  api-docs:
+    enabled: true
+    path: /v3/api-docs

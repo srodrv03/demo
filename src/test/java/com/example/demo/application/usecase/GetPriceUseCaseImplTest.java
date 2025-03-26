@@ -24,16 +24,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.openMocks;
 
 class GetPriceUseCaseImplTest {
     @Mock
     private PriceRepository priceRepository;
-
     private GetPriceUseCaseImpl getPriceUseCase;
 
     @BeforeEach
     void setUp() {
+        openMocks(this);
         getPriceUseCase = new GetPriceUseCaseImpl(priceRepository);
+
     }
 
     @Test
@@ -47,13 +49,15 @@ class GetPriceUseCaseImplTest {
 
         var priceResponse = getPriceUseCase.getPrice(request);
         assertNotNull(priceResponse);
-        assertEquals(price.id().value(), priceResponse.productId());
-        assertEquals(price.brandId().value(), priceResponse.brandId());
+        assertEquals(price.id()
+                .value(), priceResponse.productId());
+        assertEquals(price.brandId()
+                .value(), priceResponse.brandId());
 
     }
 
     @Test
-    void getPricethorwPriceNotFoundException(){
+    void getPricethorwPriceNotFoundException() {
         Long productId = 1L;
         Long brandId = 1L;
         var request = new PriceRequest(productId, brandId, LocalDateTime.of(2020, 6, 14, 10, 0));

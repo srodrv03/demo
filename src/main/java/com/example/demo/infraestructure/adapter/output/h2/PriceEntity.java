@@ -41,4 +41,5 @@ public class PriceEntity {
 
     @Column(name = "CURR")
     private String currency;
+
 }

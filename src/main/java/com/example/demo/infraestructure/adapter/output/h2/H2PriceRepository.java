@@ -12,9 +12,8 @@ import java.util.Optional;
 
 @Repository
 public interface H2PriceRepository extends PriceRepository, JpaRepository<PriceEntity, Long> {
+    PriceMapper priceMapper = new PriceMapper();
 
-
-    @Override
     @Query("""
         SELECT p FROM PriceEntity p 
         WHERE p.productId = :productId 
@@ -23,9 +22,14 @@ public interface H2PriceRepository extends PriceRepository, JpaRepository<PriceE
         ORDER BY p.priority DESC 
         LIMIT 1
     """)
-    Optional<Price> findApplicablePrice(
+    Optional<PriceEntity> findApplicablePriceEntity(
             @Param("productId") Long productId,
             @Param("brandId") Long brandId,
             @Param("applicationDate") LocalDateTime applicationDate
     );
+
+    default Optional<Price> findApplicablePrice(Long productId, Long brandId, LocalDateTime applicationDate) {
+        return findApplicablePriceEntity(productId, brandId, applicationDate)
+                .map(priceMapper::toDomain);
+    }
 }

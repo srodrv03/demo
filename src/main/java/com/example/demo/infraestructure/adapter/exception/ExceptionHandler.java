@@ -1,4 +1,4 @@
-package com.example.demo.infraestructure.rest.exception;
+package com.example.demo.infraestructure.adapter.exception;
 
 import com.example.demo.domain.PriceNotFoundException;
 import org.springframework.http.HttpStatus;

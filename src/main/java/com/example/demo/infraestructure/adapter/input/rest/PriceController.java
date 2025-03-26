@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,9 +33,9 @@ public class PriceController {
             @ApiResponse(responseCode = "404", description = "Price not found", content = @Content)})
     @GetMapping("/find")
     public ResponseEntity<PriceResponse> findPrice(
-            @Parameter(description = "ID of the Product") @RequestParam Long productId,
-            @Parameter(description = "Id of the Brand") @RequestParam Long brandId,
-            @Parameter(description = "Application date") @RequestParam LocalDateTime applicationDate) {
+            @Valid @Parameter(description = "ID of the Product") @RequestParam Long productId,
+            @Valid @Parameter(description = "Id of the Brand") @RequestParam Long brandId,
+            @Valid @Parameter(description = "Application date") @RequestParam LocalDateTime applicationDate) {
         return ResponseEntity.ok(getPriceUseCase.getPrice(new PriceRequest(productId, brandId, applicationDate)));
     }
 }

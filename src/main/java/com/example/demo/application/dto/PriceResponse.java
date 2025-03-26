@@ -1,9 +1,11 @@
 package com.example.demo.application.dto;
 
 import com.example.demo.domain.model.Price;
+import lombok.Builder;
 
 import java.time.LocalDateTime;
 
+@Builder
 public record PriceResponse(Long productId, Long brandId, Integer priceList, LocalDateTime startDate, LocalDateTime endDate,
                             Long price) {
     public static PriceResponse fromDomain(final Price price) {

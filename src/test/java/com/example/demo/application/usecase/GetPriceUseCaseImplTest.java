@@ -64,9 +64,7 @@ class GetPriceUseCaseImplTest {
 
         when(priceRepository.findApplicablePrice(productId, brandId, LocalDateTime.of(2020, 6, 14, 10, 0))).thenReturn(
                 Optional.empty());
-        assertThrows(PriceNotFoundException.class, () -> {
-            getPriceUseCase.getPrice(request);
-        });
+        assertThrows(PriceNotFoundException.class, () -> getPriceUseCase.getPrice(request));
     }
 
     private Price createMockPrice() {

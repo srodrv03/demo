@@ -3,11 +3,12 @@ package com.example.demo.application.dto;
 import com.example.demo.domain.model.Price;
 import lombok.Builder;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Builder
 public record PriceResponse(Long productId, Long brandId, Integer priceList, LocalDateTime startDate, LocalDateTime endDate,
-                            Long price) {
+                            BigDecimal price) {
     public static PriceResponse fromDomain(final Price price) {
         return new PriceResponse(
                 price.productId().value(),
@@ -17,7 +18,7 @@ public record PriceResponse(Long productId, Long brandId, Integer priceList, Loc
                         .start(),
                 price.dateRange()
                         .end(),
-                price.price().amount().longValue()
+                price.price().amount()
         );
     }
 }

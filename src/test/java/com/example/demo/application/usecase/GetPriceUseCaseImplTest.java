@@ -18,7 +18,7 @@ import org.mockito.Mock;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Currency;
-import java.util.Optional;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -44,8 +44,8 @@ class GetPriceUseCaseImplTest {
         Long brandId = 1L;
         var request = new PriceRequest(productId, brandId, LocalDateTime.of(2020, 6, 14, 10, 0));
         var price = createMockPrice();
-        when(priceRepository.findApplicablePrice(productId, brandId, LocalDateTime.of(2020, 6, 14, 10, 0))).thenReturn(
-                Optional.of(price));
+        when(priceRepository.findAllApplicablePrice(productId, brandId, LocalDateTime.of(2020, 6, 14, 10, 0))).thenReturn(
+              List.of(price));
 
         var priceResponse = getPriceUseCase.getPrice(request);
         assertNotNull(priceResponse);
@@ -62,8 +62,8 @@ class GetPriceUseCaseImplTest {
         Long brandId = 1L;
         var request = new PriceRequest(productId, brandId, LocalDateTime.of(2020, 6, 14, 10, 0));
 
-        when(priceRepository.findApplicablePrice(productId, brandId, LocalDateTime.of(2020, 6, 14, 10, 0))).thenReturn(
-                Optional.empty());
+        when(priceRepository.findAllApplicablePrice(productId, brandId, LocalDateTime.of(2020, 6, 14, 10, 0))).thenReturn(
+                List.of());
         assertThrows(PriceNotFoundException.class, () -> getPriceUseCase.getPrice(request));
     }
 

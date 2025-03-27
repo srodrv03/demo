@@ -8,28 +8,24 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.List;
 
 @Repository
 public interface H2PriceRepository extends PriceRepository, JpaRepository<PriceEntity, Long> {
     PriceMapper priceMapper = new PriceMapper();
 
     @Query("""
-        SELECT p FROM PriceEntity p 
-        WHERE p.productId = :productId 
-        AND p.brandId = :brandId 
-        AND :applicationDate BETWEEN p.startDate AND p.endDate 
-        ORDER BY p.priority DESC 
-        LIMIT 1
-    """)
-    Optional<PriceEntity> findApplicablePriceEntity(
-            @Param("productId") Long productId,
-            @Param("brandId") Long brandId,
-            @Param("applicationDate") LocalDateTime applicationDate
-    );
+                SELECT p FROM PriceEntity p 
+                WHERE p.productId = :productId 
+                AND p.brandId = :brandId 
+                AND :applicationDate BETWEEN p.startDate AND p.endDate 
+            """)
+    List<PriceEntity> findApplicablePriceEntities(@Param("productId") Long productId, @Param("brandId") Long brandId,
+                                                  @Param("applicationDate") LocalDateTime applicationDate);
 
-    default Optional<Price> findApplicablePrice(Long productId, Long brandId, LocalDateTime applicationDate) {
-        return findApplicablePriceEntity(productId, brandId, applicationDate)
-                .map(priceMapper::toDomain);
+    default List<Price> findAllApplicablePrice(Long productId, Long brandId, LocalDateTime applicationDate) {
+        return findApplicablePriceEntities(productId, brandId, applicationDate).stream()
+                .map(priceMapper::toDomain)
+                .toList();
     }
 }

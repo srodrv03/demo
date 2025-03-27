@@ -8,6 +8,10 @@ import com.example.demo.domain.repository.PriceRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class GetPriceUseCaseImpl implements GetPriceUseCase {
     private final PriceRepository priceRepository;
@@ -20,12 +24,21 @@ public class GetPriceUseCaseImpl implements GetPriceUseCase {
     @Transactional(readOnly = true)
     @Override
     public PriceResponse getPrice(final PriceRequest request) {
-        Price price =
-                priceRepository.findApplicablePrice(request.productId(), request.brandId(), request.applicationDate())
-                        .orElseThrow(() -> new PriceNotFoundException(request.productId(), request.brandId(),
-                                request.applicationDate()));
+        List<Price> applicablePrices = priceRepository.findAllApplicablePrice(request.productId(), request.brandId(),
+                request.applicationDate());
+        if (applicablePrices.isEmpty()) {
+            throw new PriceNotFoundException(request.productId(), request.brandId(), request.applicationDate());
+        }
 
-        // Convertir a respuesta
-        return PriceResponse.fromDomain(price);
+        var selectedPrice = selectAppropiatePrice(applicablePrices).orElseThrow(
+                () -> new PriceNotFoundException(request.productId(), request.brandId(), request.applicationDate()));
+
+        return PriceResponse.fromDomain(selectedPrice);
+    }
+
+    private Optional<Price> selectAppropiatePrice(final List<Price> applicablePrices) {
+        return applicablePrices.stream()
+                .max(Comparator.comparing(Price::priority));
+
     }
 }
